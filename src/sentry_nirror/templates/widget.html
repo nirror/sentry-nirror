@@ -1,0 +1,8 @@
+<h6>Nirror Visits</h6>
+<ul class="nav nav-list">
+    {% for visit in visits %}
+    <li>
+        <a href="{{ visit.url }}">{{ visit.name }}</a>
+    </li>
+    {% endfor %}
+</ul>
