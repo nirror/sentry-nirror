@@ -12,3 +12,10 @@ Install the package via ``pip``::
 
     pip install sentry-nirror
 
+Restart sentry (if your are using suvervisor)::
+
+    supervisorctl restart sentry-web
+
+In sentry, navigate to your project settings page. On the left pannel go to ``Manage Integrations`` and enable ``Nirror by Nirror Team`` plugin.
+
+The plugin adds a widget on the event group page which lists associated nirror visits.
