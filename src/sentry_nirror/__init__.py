@@ -8,6 +8,6 @@ sentry_github
 
 try:
     VERSION = __import__('pkg_resources') \
-        .get_distribution('sentry-github').version
+        .get_distribution('sentry-nirror').version
 except Exception, e:
     VERSION = 'unknown'
