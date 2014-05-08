@@ -39,18 +39,23 @@ class NirrorPlugin(IssuePlugin):
         visits = []
         for ev in events:
             http_data = ev.data.get('sentry.interfaces.Http')
+            visit_path = None
+            if 'cookies' in http_data and '_ni_v' in http_data['cookies']:
+                visit_path = http_data['cookies']['_ni_v']
             if http_data is not None and 'headers' in http_data and 'cookie' in http_data['headers']:
                 cookie_str = http_data['headers']['cookie'].encode('ascii', 'ignore')
                 c = Cookie.SimpleCookie(cookie_str)
                 if '_ni_v' in c:
                     visit_path = urllib.unquote(c['_ni_v'].value).decode('utf-8')
-                    m = re.search('#sites/\w+/r/(\w+)/v/(.+)', visit_path)
-                    if m is None:
-                        continue
-                    visit = {}
-                    visit['name'] = 'User(%s) Visit#%s' % (m.group(1), m.group(2))
-                    visit['url'] = "https://app.nirror.com/"+visit_path
-                    visits.append(visit)
+            if visit_path is None:
+                continue
+            m = re.search('#sites/\w+/r/(\w+)/v/(.+)', visit_path)
+            if m is None:
+                continue
+            visit = {}
+            visit['name'] = 'User(%s) Visit#%s' % (m.group(1), m.group(2))
+            visit['url'] = "https://app.nirror.com/"+visit_path
+            visits.append(visit)
         context = {
             'group': group,
             'visits': visits
