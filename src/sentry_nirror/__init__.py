@@ -2,7 +2,7 @@
 sentry_github
 ~~~~~~~~~~~~~
 
-:copyright: (c) 2012 by the Sentry Team, see AUTHORS for more details.
+:copyright: (c) 2014 by the Nirror Team, see AUTHORS for more details.
 :license: BSD, see LICENSE for more details.
 """
 
