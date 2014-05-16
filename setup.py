@@ -22,7 +22,7 @@ install_requires = [
 
 setup(
     name='sentry-nirror',
-    version='0.1.1',
+    version='0.1.2',
     author='Tugdual de Kerviler',
     author_email='dekervit@gmail.com',
     url='http://github.com/nirror/sentry-nirror',
