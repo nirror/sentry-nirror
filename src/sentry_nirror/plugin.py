@@ -17,6 +17,7 @@ import urllib
 import Cookie
 import os
 import re
+import six
 
 class NirrorPlugin(IssuePlugin):
     author = 'Nirror Team'
@@ -42,13 +43,10 @@ class NirrorPlugin(IssuePlugin):
             if http_data is None:
                 continue
             visit_path = None
-            if 'cookies' in http_data and '_ni_v' in http_data['cookies']:
-                visit_path = http_data['cookies']['_ni_v']
+            if 'cookies' in http_data and http_data['cookies']:
+                visit_path = self.decode_cookies(http_data['cookies'], '_ni_v')
             elif 'headers' in http_data and 'cookie' in http_data['headers']:
-                cookie_str = http_data['headers']['cookie'].encode('ascii', 'ignore')
-                c = Cookie.SimpleCookie(cookie_str)
-                if '_ni_v' in c:
-                    visit_path = urllib.unquote(c['_ni_v'].value).decode('utf-8')
+                visit_path = self.decode_cookies(http_data['headers']['cookie'], '_ni_v')
             if visit_path is None:
                 continue
             m = re.search('#sites/\w+/r/(\w+)/v/(.+)', visit_path)
@@ -63,6 +61,16 @@ class NirrorPlugin(IssuePlugin):
             'visits': visits
         }
         return self.render('widget.html', context)
+
+    def decode_cookies(self, cookie, key):
+        if isinstance(cookie, six.string_types):
+            c = Cookie.SimpleCookie(cookie.encode('ascii', 'ignore'))
+            return urllib.unquote(c[key].value).decode('utf-8') if key in c else None
+        elif type(cookie) is dict and key in cookie:
+            return cookie[key]
+        else:
+            return None
+
 
     def is_configured(self, request, project, **kwargs):
         return bool(self.get_option('repo', project))
